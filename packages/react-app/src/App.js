@@ -8,6 +8,7 @@ import Exchange from "./components/Exchange";
 import { usePools } from "./hooks";
 const App = () => {
   const { account } = useEthers();
+  const [loading, pools] = usePools();
   const poolsLoading = false;
   return (
     <div className={styles.container}>
@@ -28,10 +29,10 @@ const App = () => {
               <div className='pink_gradient' />
               <div className={styles.exchange}>
                 {account ? (
-                  poolsLoading ? (
+                  loading ? (
                     <Loader title='Pools loading, please wait!' />
                   ) : (
-                    <Exchange />
+                    <Exchange pools={pools} />
                   )
                 ) : (
                   <Loader title='Please connect your wallet!' />
