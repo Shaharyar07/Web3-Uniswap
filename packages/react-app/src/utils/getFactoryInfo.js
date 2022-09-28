@@ -16,3 +16,4 @@ export const getFactoryInfo = async (web3, factoryAddress) => {
   factoryInfo.pairs = await getPairsInfo(web3, factoryInfo.allPairs);
   return factoryInfo;
 };
+
