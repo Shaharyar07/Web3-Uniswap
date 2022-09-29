@@ -2,8 +2,7 @@ import React from "react";
 import { parseUnits, formatUnits } from "ethers/lib/utils";
 import styles from "../styles";
 
-const Balance = () => {
-  const tokenBalance = parseUnits("0.00275");
+const Balance = ({ tokenBalance }) => {
   return (
     <div className={styles.balance}>
       <p className={styles.balanceText}>

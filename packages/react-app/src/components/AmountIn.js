@@ -2,17 +2,37 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "../styles";
 import { chevronDown } from "../assets";
 import { useOnClickOutside } from "../utils";
-const AmountIn = () => {
+const AmountIn = ({
+  value,
+  onChange,
+  currencyValue,
+  onSelect,
+  currencies,
+  isSwapping,
+}) => {
   const [showList, setShowList] = useState(false);
+  const [activeCurrency, setActiveCurrency] = useState("Select");
+  const ref = useRef();
+  useOnClickOutside(ref, () => setShowList(false));
+
+  useEffect(() => {
+    if (Object.keys(currencies).includes(currencyValue)) {
+      setActiveCurrency(currencies[currencyValue]);
+    } else {
+      setActiveCurrency("Select");
+    }
+  }, [currencyValue, currencies]);
   return (
     <div className={styles.amountContainer}>
       <input
         type='number'
         placeholder='0.0'
-        onChange={() => {}}
+        onChange={(e) =>
+          typeof onChange === "function" && onChange(e.target.value)
+        }
         className={styles.amountInput}
-        value=''
-        disabled={false}
+        value={value}
+        disabled={isSwapping}
       />
       <div
         className='relative'
@@ -21,7 +41,7 @@ const AmountIn = () => {
         }}
       >
         <button className={styles.currencyButton}>
-          {"ETH"}{" "}
+          {activeCurrency}{" "}
           <img
             src={chevronDown}
             alt='Chevron Down'
@@ -31,24 +51,22 @@ const AmountIn = () => {
           />
         </button>
         {showList && (
-          <ul className={styles.currencyList}>
-            {[
-              {
-                token: "ETH",
-                tokenName: "Ethereum",
-              },
-              {
-                token: "SOL",
-                tokenName: "Solana",
-              },
-            ].map(({ token, tokenName }, index) => (
+          <ul ref={ref} className={styles.currencyList}>
+            {Object.entries(currencies).map(([token, tokenName], index) => (
               <li
                 key={index}
                 className={`${styles.currencyListItem} ${
-                  true ? "bg-site-dim2" : ""
+                  activeCurrency === tokenName ? "bg-site-dim2" : ""
                 } cursor-pointer`}
+                onClick={() => {
+                  if (typeof onSelect === "function") {
+                    onSelect(token);
+                    setActiveCurrency(tokenName);
+                    setShowList(false);
+                  }
+                }}
               >
-                {tokenName }
+                {tokenName}
               </li>
             ))}
           </ul>

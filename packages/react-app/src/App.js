@@ -9,7 +9,7 @@ import { usePools } from "./hooks";
 const App = () => {
   const { account } = useEthers();
   const [loading, pools] = usePools();
-  const poolsLoading = false;
+
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
